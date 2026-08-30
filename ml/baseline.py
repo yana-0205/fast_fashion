@@ -69,6 +69,38 @@ class StatisticalForecastBaseline:
             "seasons": ["spring-summer", "autumn-winter"],
         }
 
+    def market_trends(self, limit: int = 8) -> dict:
+        weekly = self.sales[[str(index) for index in range(10)]].mean(axis=0)
+
+        def ranked(field: str) -> list[dict]:
+            grouped = (
+                self.sales.groupby(field, dropna=False)
+                .agg(products=(field, "size"), average_sales=("0", "mean"))
+                .reset_index()
+                .sort_values(["products", "average_sales"], ascending=False)
+                .head(limit)
+            )
+            return [
+                {
+                    "name": str(row[field]),
+                    "products": int(row["products"]),
+                    "average_sales": round(float(row["average_sales"]), 3),
+                }
+                for _, row in grouped.iterrows()
+            ]
+
+        return {
+            "dataset_rows": int(len(self.sales)),
+            "categories": ranked("category"),
+            "colors": ranked("color"),
+            "fabrics": ranked("fabric"),
+            "weekly_average": [
+                {"week": index + 1, "sales": round(float(value), 3)}
+                for index, value in enumerate(weekly)
+            ],
+            "source": "Visuelle 2.0 raw sales.csv",
+        }
+
     def match_image(self, category: str, color: str, fabric: str) -> Path:
         matched, _ = self._matched_rows(category, color, fabric)
         relative_path = matched.iloc[0]["image_path"]

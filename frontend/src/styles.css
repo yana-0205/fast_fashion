@@ -43,6 +43,8 @@ body { margin: 0; }
 .section-heading { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
 .filter-bar { margin-bottom: 24px; }
 .filter-bar .ant-select { min-width: 160px; }
+.trend-card { margin-bottom: 20px; border: 0; box-shadow: 0 8px 24px rgba(24, 45, 36, 0.06); }
+.weekly-card { padding-top: 8px; }
 @media (max-width: 720px) {
   .header { padding-inline: 16px; gap: 12px; }
   .brand { display: none; }

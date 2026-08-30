@@ -8,12 +8,14 @@ from .views import (
     forecast_design,
     generate_design,
     insight_design,
+    market_trends,
     options,
 )
 
 urlpatterns = [
     path("dashboard/", dashboard),
     path("options/", options),
+    path("market-trends/", market_trends),
     path("designs/generate/", generate_design),
     path("designs/compare/", compare_designs),
     path("designs/", DesignListCreateView.as_view()),

@@ -27,6 +27,13 @@ class CoreWorkflowTests(TestCase):
         self.assertIn("long dress", response.json()["categories"])
         self.assertGreater(len(response.json()["fabrics"]), 10)
 
+    def test_market_trends_are_derived_from_raw_dataset(self):
+        response = self.client.get("/api/market-trends/")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()["weekly_average"]), 10)
+        self.assertGreater(response.json()["dataset_rows"], 1000)
+        self.assertEqual(response.json()["source"], "Visuelle 2.0 raw sales.csv")
+
     def test_offline_core_workflow(self):
         generated = self.client.post("/api/designs/generate/", self.payload, format="json")
         self.assertEqual(generated.status_code, 201, generated.content)

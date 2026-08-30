@@ -39,6 +39,11 @@ def options(_request):
     return Response(get_baseline().options())
 
 
+@api_view(["GET"])
+def market_trends(_request):
+    return Response(get_baseline().market_trends())
+
+
 class DesignListCreateView(generics.ListCreateAPIView):
     queryset = Design.objects.all()
     serializer_class = DesignSerializer

@@ -16,6 +16,7 @@ async function request(path, options = {}) {
 export const api = {
   options: () => request("/options/"),
   dashboard: () => request("/dashboard/"),
+  marketTrends: () => request("/market-trends/"),
   listDesigns: () => request("/designs/"),
   getDesign: (id) => request(`/designs/${id}/`),
   deleteDesign: (id) => request(`/designs/${id}/`, { method: "DELETE" }),

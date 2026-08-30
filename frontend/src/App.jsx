@@ -5,6 +5,7 @@ import CreateDesign from "./pages/CreateDesign";
 import Dashboard from "./pages/Dashboard";
 import DesignDetail from "./pages/DesignDetail";
 import Portfolio from "./pages/Portfolio";
+import MarketTrends from "./pages/MarketTrends";
 
 const { Header, Content } = Layout;
 
@@ -17,6 +18,7 @@ export default function App() {
           { key: "create", label: <Link to="/create">创建方案</Link> },
           { key: "portfolio", label: <Link to="/portfolio">方案库</Link> },
           { key: "compare", label: <Link to="/compare">方案对比</Link> },
+          { key: "trends", label: <Link to="/trends">市场趋势</Link> },
         ]} />
       </Header>
       <Content>
@@ -26,6 +28,7 @@ export default function App() {
           <Route path="/designs/:id" element={<DesignDetail />} />
           <Route path="/portfolio" element={<Portfolio />} />
           <Route path="/compare" element={<Compare />} />
+          <Route path="/trends" element={<MarketTrends />} />
         </Routes>
       </Content>
     </Layout>
