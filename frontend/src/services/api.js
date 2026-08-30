@@ -15,6 +15,7 @@ async function request(path, options = {}) {
 
 export const api = {
   options: () => request("/options/"),
+  dashboard: () => request("/dashboard/"),
   listDesigns: () => request("/designs/"),
   getDesign: (id) => request(`/designs/${id}/`),
   deleteDesign: (id) => request(`/designs/${id}/`, { method: "DELETE" }),
@@ -28,4 +29,3 @@ export function imageUrl(path) {
   if (!path) return "";
   return path.startsWith("http") ? path : `${MEDIA_BASE}${path}`;
 }
-

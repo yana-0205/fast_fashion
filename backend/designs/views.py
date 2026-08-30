@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from django.db.models import Avg
 from rest_framework import generics, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -10,6 +11,27 @@ from .services import attach_dataset_image, build_template_insight, get_baseline
 
 def health(_request):
     return JsonResponse({"status": "ok", "version": "v1"})
+
+
+@api_view(["GET"])
+def dashboard(_request):
+    designs = Design.objects.select_related("forecast").all()
+    total_designs = designs.count()
+    forecasted = designs.filter(forecast__isnull=False)
+    top_design = forecasted.order_by("-forecast__total_forecast").first()
+    recent = designs[:4]
+    return Response(
+        {
+            "total_designs": total_designs,
+            "forecasted_designs": forecasted.count(),
+            "average_total_forecast": round(
+                forecasted.aggregate(value=Avg("forecast__total_forecast"))["value"] or 0,
+                2,
+            ),
+            "top_design": DesignSerializer(top_design).data if top_design else None,
+            "recent_designs": DesignSerializer(recent, many=True).data,
+        }
+    )
 
 
 @api_view(["GET"])
@@ -78,4 +100,22 @@ def compare_designs(request):
             {"error": {"code": "DESIGN_NOT_FOUND", "message": "One or more designs do not exist.", "details": {}}},
             status=status.HTTP_404_NOT_FOUND,
         )
-    return Response({"designs": DesignSerializer(designs, many=True).data})
+    forecasted = [design for design in designs if hasattr(design, "forecast")]
+    recommendation = None
+    if len(forecasted) == 2:
+        winner = max(forecasted, key=lambda item: item.forecast.total_forecast)
+        other = min(forecasted, key=lambda item: item.forecast.total_forecast)
+        difference = winner.forecast.total_forecast - other.forecast.total_forecast
+        if abs(difference) < 1e-9:
+            recommendation = {
+                "winner_id": None,
+                "summary": "两个方案的当前基线累计预测相同，应结合差异化程度、价格和目标客群继续判断。",
+                "basis": "ten_week_total_tie",
+            }
+        else:
+            recommendation = {
+                "winner_id": winner.id,
+                "summary": f"{winner.title} 的十周累计预测高出 {difference:.1f} 件，当前基线更支持该方案。",
+                "basis": "higher_ten_week_total",
+            }
+    return Response({"designs": DesignSerializer(designs, many=True).data, "recommendation": recommendation})

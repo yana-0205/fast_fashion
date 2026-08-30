@@ -4,6 +4,7 @@ from .views import (
     DesignDetailView,
     DesignListCreateView,
     compare_designs,
+    dashboard,
     forecast_design,
     generate_design,
     insight_design,
@@ -11,6 +12,7 @@ from .views import (
 )
 
 urlpatterns = [
+    path("dashboard/", dashboard),
     path("options/", options),
     path("designs/generate/", generate_design),
     path("designs/compare/", compare_designs),

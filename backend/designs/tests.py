@@ -44,3 +44,13 @@ class CoreWorkflowTests(TestCase):
         response = self.client.post("/api/designs/compare/", {"design_ids": [1]}, format="json")
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json()["error"]["code"], "EXACTLY_TWO_DESIGNS_REQUIRED")
+
+    def test_dashboard_summarizes_saved_designs(self):
+        generated = self.client.post("/api/designs/generate/", self.payload, format="json")
+        design_id = generated.json()["id"]
+        self.client.post(f"/api/designs/{design_id}/forecast/", {}, format="json")
+        response = self.client.get("/api/dashboard/")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["total_designs"], 1)
+        self.assertEqual(response.json()["forecasted_designs"], 1)
+        self.assertEqual(response.json()["top_design"]["id"], design_id)
