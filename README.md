@@ -2,6 +2,10 @@
 
 Portfolio-oriented reconstruction of a fast-fashion womenswear design and demand forecasting platform. V1 preserves the original product intent while rebuilding the workflow, interface, forecasting boundary, and engineering structure.
 
+![Design workspace](assets/screenshots/create-workspace.png)
+
+![Design comparison](assets/screenshots/design-comparison.png)
+
 ## What it does
 
 - Builds a womenswear concept from category, color, fabric, season, price, and design notes
