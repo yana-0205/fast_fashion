@@ -1,0 +1,18 @@
+{
+  "model_version": "visuelle-statistical-baseline-v1",
+  "train_rows": 96166,
+  "test_rows": 10684,
+  "forecast_horizon": 10,
+  "metrics": {
+    "mae": 0.021086,
+    "rmse": 0.031155,
+    "wape": 0.860063
+  },
+  "match_levels": {
+    "category+color+fabric": 9228,
+    "category+color": 1442,
+    "category": 14,
+    "global": 0
+  },
+  "data_scale": "normalized Visuelle 2.0 stfore split"
+}
