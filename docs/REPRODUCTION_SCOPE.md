@@ -27,5 +27,4 @@
 
 ## Evidence policy
 
-The portfolio will label restored behavior, newly implemented behavior, and simplified behavior separately. A lightweight baseline may replace the historical forecasting model if its weights or complete training environment cannot be recovered.
-
+The portfolio will label implemented, deferred, and experimental behavior separately. A statistical shortcut must not replace the trained forecasting artifact in the product runtime.

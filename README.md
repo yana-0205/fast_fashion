@@ -9,20 +9,20 @@ Portfolio-oriented reconstruction of a fast-fashion womenswear design and demand
 ## What it does
 
 - Builds a womenswear concept from category, color, fabric, season, price, and design notes
-- Matches a real Visuelle 2.0 reference image when no external image API is configured
-- Forecasts the next ten weeks from similar historical product profiles
+- Accepts a user-uploaded design image, with a text-to-image provider planned as a separate adapter
+- Forecasts the next ten weeks only when a validated trained artifact is configured
 - Separates statistical output from deterministic narrative insights
 - Saves concepts and compares two forecast curves side by side
 
 ## V1 workflow
 
-Create a design concept, obtain a dataset-matched image, forecast ten weeks of sales, review market insights, save the concept, and compare two concepts.
+Create or upload a design concept, run it through an exported ten-week forecast model, review market insights, save the concept, and compare two concepts.
 
 ## Model status
 
-V1 currently uses an explainable statistical lower-bound model. On the official normalized split it reports MAE 0.021086, RMSE 0.031155, and WAPE 0.860063. The high WAPE is documented deliberately: this model validates the workflow and provides a reproducible fallback, but it is not presented as production-quality demand forecasting.
+No product inference artifact is configured yet. This is deliberate: Visuelle 2.0 is a training and evaluation dataset, not an online product data source. Until training and held-out evaluation are complete, the forecast API returns an explicit unavailable status.
 
-See `docs/MODEL_CARD.md` and `docs/baseline_metrics.json`.
+See `docs/MODEL_CARD.md`.
 
 ## Local setup
 
@@ -46,18 +46,12 @@ npm install
 npm run dev
 ```
 
-### Dataset validation
+### Offline training-data validation
 
 The full `visuelle2` directory is intentionally excluded from Git.
 
 ```bash
 python scripts/validate_dataset.py --root ./visuelle2
-```
-
-Evaluate the baseline:
-
-```bash
-python scripts/evaluate_baseline.py --root ./visuelle2 --output docs/baseline_metrics.json
 ```
 
 ## API

@@ -6,7 +6,7 @@ from rest_framework.response import Response
 
 from .models import Design, Forecast, Insight
 from .serializers import DesignSerializer, ForecastSerializer, InsightSerializer
-from .services import attach_dataset_image, build_template_insight, get_baseline
+from .services import PRODUCT_OPTIONS, build_template_insight, save_uploaded_design_image
 
 
 def health(_request):
@@ -36,12 +36,7 @@ def dashboard(_request):
 
 @api_view(["GET"])
 def options(_request):
-    return Response(get_baseline().options())
-
-
-@api_view(["GET"])
-def market_trends(_request):
-    return Response(get_baseline().market_trends())
+    return Response(PRODUCT_OPTIONS)
 
 
 class DesignListCreateView(generics.ListCreateAPIView):
@@ -56,26 +51,39 @@ class DesignDetailView(generics.RetrieveDestroyAPIView):
 
 @api_view(["POST"])
 def generate_design(request):
+    uploaded_image = request.FILES.get("image")
+    if uploaded_image is None:
+        return Response(
+            {"error": {"code": "DESIGN_IMAGE_REQUIRED", "message": "Upload a design image.", "details": {}}},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
     serializer = DesignSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     design = serializer.save()
     try:
-        attach_dataset_image(design)
-    except (FileNotFoundError, IndexError) as exc:
+        save_uploaded_design_image(design, uploaded_image)
+    except OSError as exc:
         design.delete()
         return Response(
-            {"error": {"code": "DATASET_IMAGE_UNAVAILABLE", "message": str(exc), "details": {}}},
-            status=status.HTTP_503_SERVICE_UNAVAILABLE,
+            {"error": {"code": "IMAGE_SAVE_FAILED", "message": str(exc), "details": {}}},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
     return Response(DesignSerializer(design).data, status=status.HTTP_201_CREATED)
 
 
 @api_view(["POST"])
 def forecast_design(_request, pk):
-    design = generics.get_object_or_404(Design, pk=pk)
-    result = get_baseline().predict(design.category, design.color, design.fabric)
-    forecast, _ = Forecast.objects.update_or_create(design=design, defaults=result)
-    return Response(ForecastSerializer(forecast).data)
+    generics.get_object_or_404(Design, pk=pk)
+    return Response(
+        {
+            "error": {
+                "code": "FORECAST_MODEL_UNAVAILABLE",
+                "message": "A trained forecast model artifact has not been configured yet.",
+                "details": {},
+            }
+        },
+        status=status.HTTP_503_SERVICE_UNAVAILABLE,
+    )
 
 
 @api_view(["POST"])

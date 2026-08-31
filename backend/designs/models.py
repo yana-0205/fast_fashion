@@ -11,7 +11,7 @@ class Design(models.Model):
     prompt = models.TextField(blank=True)
     negative_prompt = models.TextField(blank=True)
     image_path = models.CharField(max_length=500, blank=True)
-    image_source = models.CharField(max_length=40, default="dataset")
+    image_source = models.CharField(max_length=40, default="user-upload")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -39,4 +39,3 @@ class Insight(models.Model):
     summary = models.TextField()
     source = models.CharField(max_length=40, default="template")
     created_at = models.DateTimeField(auto_now_add=True)
-

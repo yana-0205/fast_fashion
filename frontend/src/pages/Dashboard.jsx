@@ -14,7 +14,7 @@ export default function Dashboard() {
       <section className="hero dashboard-hero">
         <Typography.Text className="eyebrow">DESIGN WITH EVIDENCE</Typography.Text>
         <Typography.Title>从服装创意到十周需求预测</Typography.Title>
-        <Typography.Paragraph>创建女装新品方案，用 Visuelle 2.0 历史数据评估销量潜力，并比较不同设计的市场表现。</Typography.Paragraph>
+        <Typography.Paragraph>创建或上传女装新品设计，通过训练完成的多模态模型评估未来十周销量，并比较不同方案。</Typography.Paragraph>
         <Link to="/create"><Button type="primary" size="large">创建新品方案</Button></Link>
       </section>
       <section className="dashboard-content">
@@ -34,4 +34,3 @@ export default function Dashboard() {
     </main>
   );
 }
-

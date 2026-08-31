@@ -1,51 +1,37 @@
-# Model Card: Visuelle Statistical Baseline V1
+# Forecast Model Card
 
 ## Purpose
 
-Provide a deterministic, transparent ten-week demand forecast while the historical multimodal neural network is being recovered and independently validated.
+Track the trained ten-week multimodal demand forecasting artifact used by the product runtime.
 
-## Method
+## Current status
 
-For a new concept, the model selects historical records using the most specific available match:
+No production inference artifact is configured yet. The API intentionally returns `FORECAST_MODEL_UNAVAILABLE` instead of manufacturing a prediction from training-set neighbors or historical averages.
 
-1. Category, color, and fabric
-2. Category and color
-3. Category
-4. Global fallback
+## Intended training inputs
 
-The interactive product uses the mean raw weekly sales profile of matched records. The offline evaluation applies the same grouping strategy to the official normalized `stfore_train.csv` and evaluates against `stfore_test.csv`.
+- Product image features
+- Category, color, fabric, and season labels
+- Historical and exogenous time-series features defined by the training experiment
+- Ten-week sales target
 
-## Evaluation
+## Required artifact contract
 
-Run:
-
-```bash
-python scripts/evaluate_baseline.py --root ./visuelle2 --output docs/baseline_metrics.json
-```
-
-The generated `baseline_metrics.json` is the source of truth for the current metrics.
-
-Current V1 result on 96,166 training rows and 10,684 held-out test rows:
-
-- MAE: 0.021086
-- RMSE: 0.031155
-- WAPE: 0.860063
-- Exact category/color/fabric matches: 9,228 test records
-
-The high WAPE confirms that this baseline should be treated as a reproducible lower bound and workflow fallback, not a production-quality forecasting model.
+- Model weights
+- Label vocabularies
+- Feature normalization parameters
+- Image preprocessing configuration
+- Forecast horizon and output scale
+- Training data version
+- Held-out evaluation metrics
 
 ## Intended use
 
-- Product workflow validation
-- Explainable fallback forecast
-- Benchmark for restored or newly trained models
-- Early comparison between design concepts
+- Forecast future ten-week demand for a user-supplied or generated design
+- Compare candidate designs using outputs from the same validated artifact
 
 ## Limitations
 
-- This is a similarity-based statistical baseline, not the original HMA-RNN.
-- It does not infer causal effects of price or design changes.
-- It does not yet extract visual embeddings from a newly generated image.
-- Historical averages can underrepresent rare or breakout products.
-- Interactive raw-unit results and normalized test metrics use different scales and must not be compared directly.
-- Results support exploration and portfolio demonstration, not production inventory commitments.
+- The model must not be used before held-out evaluation is completed.
+- Predictions do not establish causal effects of price or design changes.
+- Results support design decisions but do not constitute inventory guarantees.

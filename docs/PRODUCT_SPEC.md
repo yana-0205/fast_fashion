@@ -8,7 +8,7 @@ Help a fast-fashion designer or merchandise planner create a womenswear concept 
 
 1. Select category, color, fabric, season, and price.
 2. Add optional positive and negative design descriptions.
-3. Generate an image or match the nearest Visuelle 2.0 example.
+3. Generate an image through a configured provider or upload a design image.
 4. Forecast ten weeks of sales.
 5. Review color, fabric, season, and price insights.
 6. Save the concept and compare it with one alternative.
@@ -16,7 +16,8 @@ Help a fast-fashion designer or merchandise planner create a womenswear concept 
 ## V1 features
 
 - Design concept creation
-- Dataset-backed image fallback
+- User-uploaded design image
+- Pluggable text-to-image provider boundary
 - Ten-week sales forecast
 - Market insight report
 - Saved design portfolio
@@ -33,10 +34,10 @@ Help a fast-fashion designer or merchandise planner create a womenswear concept 
 
 ## Acceptance criteria
 
-- The complete workflow works without external API keys.
-- Forecasts contain exactly ten finite, non-negative values.
+- Design creation works without external API keys through image upload.
+- Forecasting is enabled only when a validated model artifact is configured.
+- Forecasts contain exactly ten finite, non-negative values when the model is available.
 - Forecast output identifies model version and evaluation metrics.
 - The application distinguishes model output, data statistics, and generated explanation.
-- The full Visuelle 2.0 dataset is never committed to Git.
+- Visuelle 2.0 is used only by offline training and evaluation workflows.
 - A clean checkout can be started by following the README.
-

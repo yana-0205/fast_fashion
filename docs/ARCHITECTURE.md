@@ -6,8 +6,8 @@
 React workspace
   -> Django REST API
      -> Design persistence (SQLite)
-     -> Visuelle image matcher
-     -> Ten-week forecast provider
+     -> Image upload / text-to-image provider
+     -> Exported ten-week forecast model artifact
      -> Deterministic insight provider
 ```
 
@@ -15,11 +15,12 @@ React workspace
 
 - `frontend/` owns interaction and visualization.
 - `backend/designs/` owns API contracts and persistence.
-- `ml/` owns forecasting and dataset matching logic.
-- `visuelle2/` is a local data dependency and is never committed.
+- `ml/` owns offline training, evaluation, artifact export, and runtime inference contracts.
+- `visuelle2/` is an offline training dependency and is never read by the product runtime.
 - External image and language model providers are optional future adapters, not requirements for V1.
 
-## Offline-first behavior
+## Data boundary
 
-V1 deliberately completes its entire workflow without API credentials. Attribute selection is matched to a real Visuelle 2.0 product image, forecasting uses historical sales profiles, and insights use deterministic templates. This makes failures explicit and the project reproducible.
+Visuelle 2.0 belongs exclusively to model development: preprocessing, training, validation, and artifact export. The Django product runtime consumes only the exported model artifact and its preprocessing metadata. It never queries the training dataset to manufacture an online prediction.
 
+Design images come from user upload or a separately configured text-to-image provider. Market analysis must identify its own source and cannot relabel training-data statistics as current market intelligence.
